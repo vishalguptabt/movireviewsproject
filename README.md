@@ -7,4 +7,6 @@ docker-compose up
 ```
 Output from these commands will look like this
 
-![alt](images/import_icon.png)
+![alt](images/output.png)
+
+Open the browser and navigate to http://127.0.0.1:8000/client/ to see the example running
