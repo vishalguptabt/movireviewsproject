@@ -9,7 +9,7 @@ class Clients(generics.ListAPIView):
     def get_queryset(self):
         return Client.objects.all()
 
-class ClientByPk(generics.RetrieveAPIView):
+class RetrieveUpdateClient(generics.RetrieveUpdateAPIView):
     serializer_class=ClientSeializer
     ##TODO Add Permissions Check
     
@@ -18,3 +18,8 @@ class ClientByPk(generics.RetrieveAPIView):
         return Client.objects.filter(pk=a_pk)
 
 # Create your views here.
+class CreateClient(generics.CreateAPIView):
+    serializer_class=ClientSeializer
+
+    def perform_create(self, serializer):
+        return super().perform_create(serializer)

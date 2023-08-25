@@ -10,14 +10,68 @@
     />
 
     <script>
-      async function getData(url) {
+      
+      async function getData() {
         
         var clientId=document.getElementById('clientList').value
-        const response = await fetch("/api/clients/"+clientId);
-        const client = await response.json();
-        console.log(client);
-        document.getElementsByClassName("card-title")[0].textContent=client.first_name+' '+client.last_name
-        document.getElementsByClassName("card-text")[0].textContent='Company Name  :'+client.company_name
+
+        if(document.getElementById('clientList').value.localeCompare('-1')==0){
+          // Create case 
+          // Clear the form
+          document.getElementById("firstName").value=''//+' '+client.last_name
+          document.getElementById("lastName").value=''
+          document.getElementById("companyName").value=''
+        }else{
+          
+          // Get data from the API
+
+          const response = await fetch("/api/clients/"+clientId);
+          const client = await response.json();
+          console.log(client);
+          document.getElementById("firstName").value=client.first_name //+' '+client.last_name
+          document.getElementById("lastName").value=client.last_name
+          document.getElementById("companyName").value=client.company_name
+        }
+
+      }
+
+      async function saveData() {
+        
+        var clientId=document.getElementById('clientList').value
+        var requestBody;
+        var url;
+        if(document.getElementById('clientList').value.localeCompare('-1')==0){
+          //Create a client
+          requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              "first_name": document.getElementById("firstName").value,
+              "last_name": document.getElementById("lastName").value,
+              "company_name": document.getElementById("companyName").value
+          })
+          };
+          
+          url = "/api/clients/create/"; 
+          
+        }else {
+          //Update a client
+          requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              "id": document.getElementById('clientList').value,  
+              "first_name": document.getElementById("firstName").value,
+              "last_name": document.getElementById("lastName").value,
+              "company_name": document.getElementById("companyName").value
+          })
+          };
+
+          url = "/api/clients/"+clientId;  
+        } 
+
+        const response = await fetch(url, requestOptions);
+
       }
     </script>
 
@@ -27,18 +81,31 @@
           <p>Select a Client</p>
           <select id="clientList" class="form-select form-select-sm" id="clientList" aria-label="Small select example"
           onChange="getData()">
-            <option selected>Select a client</option>
+            <option selected>Select a client to Update</option>
+            <option value="-1">Create a Client</option>
             {% for client in clients %}
             <option value="{{ client.pk }}">{{ client }}</option>
             {% endfor %}
           </select>
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              
+
+          <form onsubmit="return false;">
+            <div class="mb-3">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" aria-describedby="firstName">
             </div>
-          </div>
+            <div class="mb-3">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="lastName">
+            </div>
+            <div class="mb-3">
+              <label for="companyName" class="form-label">Company Name</label>
+              <input type="text" class="form-control" id="companyName">
+            </div>
+            <button type="submit" class="btn btn-primary" onClick="saveData()" >Save Changes</button>
+          </form>
+
+
+
     </div>
   </body>
   </html>
