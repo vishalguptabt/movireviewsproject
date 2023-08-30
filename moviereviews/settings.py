@@ -27,8 +27,9 @@ SECRET_KEY = 'django-insecure-+j1m+(!m*l=4)wvb9381sh*ama8hqjn1b=8(c%3t^mlr$$si=-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#For testing with AWS loadbalancer
+#ALLOWED_HOSTS = ['ui-load-balancer-dev-1022031329.us-east-1.elb.amazonaws.com']
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
